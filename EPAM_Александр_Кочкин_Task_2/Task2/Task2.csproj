@@ -66,13 +66,14 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\App\index.css" />
     <Content Include="packages.config" />
     <Content Include="Scripts\App\app.fakeData.js" />
     <Content Include="Scripts\App\app.pageCtrl.js" />
     <Content Include="Scripts\App\app.pageView.js" />
     <Content Include="Scripts\App\app.storage.js" />
-    <Content Include="Scripts\App\app.render.js" />
-    <Content Include="Scripts\App\app.templ.js" />
+    <Content Include="Scripts\App\app.utilBrowser.js" />
+    <Content Include="Scripts\App\app.templ.mainHtml.js" />
     <Content Include="Scripts\App\app.templ.row.js" />
     <Content Include="Scripts\App\app.util.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
@@ -118,9 +119,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\App\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

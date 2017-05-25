@@ -1,4 +1,4 @@
-﻿app.templ = (function() {
+﻿app.templ.mainHtml = (function () {
     return '<div class="container-fluid">\
         <div class="row">\
             <div class="col-lg-12">\

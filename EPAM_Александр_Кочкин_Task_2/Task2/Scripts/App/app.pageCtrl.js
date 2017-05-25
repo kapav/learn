@@ -1,15 +1,22 @@
 ﻿app.pageCtrl = (function() {
     var configMap = {
-            mainHtml: app.templ
+            mainHtml: app.templ.mainHtml
         },
         stateMap = {
             $container: null
         },
-        init;
-    init = function ($container) {
+        bodyInnerBlock, init;
+    init = function($container) {
+		var templBody;
+        templBody = configMap.mainHtml;
+        bodyInnerBlock = _.template(templBody)({
+            
+        });
         stateMap.$container = $container;
-        $container.html(configMap.mainHtml);
+        $container.html(bodyInnerBlock);
         app.pageView.init();
     };
-    return { init: init };
+    return {
+        init: init
+    };
 })();

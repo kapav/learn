@@ -1,0 +1,22 @@
+﻿span.error-msg {
+    color: #f00;
+}
+
+form.data-paint-red input:focus {
+    color: #f00;
+    border-color: #f00;
+}
+
+input.data-paint-red, input.data-paint-red:focus {
+    color: #f00;
+    border-color: #f00;
+}
+
+div.row.row-above-table {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+table > tbody > tr > td.vertical-middle {
+	vertical-align: middle;
+}

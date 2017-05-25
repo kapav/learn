@@ -1,5 +1,5 @@
 ﻿app.templ.row = (function() {
-    return '<td>\
+    return '<td class="vertical-middle">\
             <div class="container-fluid">\
                 <div class="row">\
                     <div class="col-lg-10">\
@@ -13,7 +13,7 @@
                 </div>\
             </div>\
         </td>\
-        <td class="text-center">\
+        <td class="vertical-middle">\
             <div class="container-fluid">\
                 <div class="row">\
                     <!--Отображаемая цена, взятая из хранилища.-->\
@@ -37,4 +37,4 @@
                 </div>\
             </div>\
         </td>';
-});
+})();

@@ -1,13 +1,16 @@
-﻿app.render = (function() {
+﻿app.utilBrowser = (function () {
     var appendTableRow;
     appendTableRow = function(prod) {
-        var formatterUsdCur, trInnerBlock, trElem;
+        var formatterUsdCur, templRow, trInnerBlock, trElem;
         formatterUsdCur = new Intl.NumberFormat("en-US",
         {
             style: "currency",
             currency: "USD"
         });
-        trInnerBlock = app.templ.row;
+        templRow = app.templ.row;
+        trInnerBlock = _.template(templRow)({
+            
+        });
         trElem = $(document.createElement("tr")).html(trInnerBlock)[0];
         trElem.id = "row" + prod.id;
 
@@ -19,5 +22,7 @@
 
         $(this).append(trElem);
     };
-    return { appendTableRow: appendTableRow };
+    return {
+		appendTableRow: appendTableRow
+	};
 })();

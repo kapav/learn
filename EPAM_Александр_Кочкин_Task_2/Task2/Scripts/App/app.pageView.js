@@ -6,24 +6,21 @@
         glyphiconBottomClass = "glyphicon glyphicon-triangle-bottom",
         sortingName = false,
         sortingPrice = false,
-        getFilteredInventory, configSorting, render, onClickToggleSorting, init;
+        getFilteredInventory, configSorting, render, onClickBtnFilter, onClickToggleSorting, init;
 	getFilteredInventory = function(dbFilterUpperCase) {
-		var arrFilter;
-		arrFilter = function(arr, dbFilterUc) {
-			var result = [],
+		    var result = [],
+                arr = configMap.inventory,
 				func, i, val;
 			func = function(arrVal, dbFilterUc) {
 				return arrVal.name.slice(0, dbFilterUc.length).toUpperCase() === dbFilterUc;
 			};
 			for (i = 0; i < arr.length; i++) {
 				val = arr[i];
-				if (func(val, dbFilterUc)) {
+				if (func(val, dbFilterUpperCase)) {
 					result.push(val);
 				}
 			}
 			return result;
-		}
-		return arrFilter(configMap.inventory, dbFilterUpperCase);
 	};
     configSorting = function() {
         var glyphiconToggle = this.firstElementChild,
@@ -62,7 +59,7 @@
         $(tbodyElement).append(tableRows);
     };
 	onClickBtnFilter = function() {
-		var filteredInventory = [],
+		var filteredInventory,
 			dbFilter = document.forms.filterAndAddForm.filterName,
 			dbFilterUpperCase = dbFilter.value.toUpperCase();
         if (dbFilterUpperCase.trim()) {

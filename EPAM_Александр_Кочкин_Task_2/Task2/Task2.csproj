@@ -67,14 +67,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\App\index.css" />
+    <Content Include="HTML\main.html" />
+    <Content Include="HTML\row.html" />
     <Content Include="packages.config" />
     <Content Include="Scripts\App\app.fakeData.js" />
     <Content Include="Scripts\App\app.pageCtrl.js" />
     <Content Include="Scripts\App\app.pageView.js" />
     <Content Include="Scripts\App\app.storage.js" />
     <Content Include="Scripts\App\app.utilBrowser.js" />
-    <Content Include="Scripts\App\app.templ.mainHtml.js" />
-    <Content Include="Scripts\App\app.templ.row.js" />
     <Content Include="Scripts\App\app.util.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
@@ -91,7 +91,6 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="HTML\layout.html" />
     <Content Include="index.html" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

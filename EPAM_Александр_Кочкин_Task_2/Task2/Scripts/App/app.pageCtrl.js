@@ -1,12 +1,21 @@
 ﻿app.pageCtrl = (function() {
     var configMap = {
-            mainHtml: app.templ.mainHtml
+            mainHtml: null
         },
         stateMap = {
             $container: null
         },
         bodyInnerBlock, init;
-    init = function($container) {
+    $.ajax({
+        url: 'HTML/main.html',
+        method: 'GET',
+        dataType: 'html',
+        async: false,
+        success: function (data) {
+            configMap.mainHtml = data;
+        }
+    });
+    init = function ($container) {
 		var templBody;
         templBody = configMap.mainHtml;
         bodyInnerBlock = _.template(templBody)({

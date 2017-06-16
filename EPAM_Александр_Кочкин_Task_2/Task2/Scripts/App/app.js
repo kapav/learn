@@ -1,12 +1,8 @@
 ﻿var app = (function() {
-    var templ, init;
-    templ = {};
+    var init;
     init = function ($container) {
         app.storage.init();
         app.pageCtrl.init($container);
     };
-    return {
-        templ: templ,
-        init: init
-    };
+    return { init: init };
 })();

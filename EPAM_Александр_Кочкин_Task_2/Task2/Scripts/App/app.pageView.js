@@ -1,33 +1,42 @@
 ﻿app.pageView = (function() {
     var configMap = {
-            inventory: app.storage.inventory.getDb()
+            inventory: app.storage.inventory.getDb(),
+			makeRenderMap: app.util.makeRenderMap
         },
         glyphiconTopClass = "glyphicon glyphicon-triangle-top",
         glyphiconBottomClass = "glyphicon glyphicon-triangle-bottom",
         sortingName = false,
         sortingPrice = false,
-        getFilteredInventory, configSorting, render, onClickBtnFilter, onClickToggleSorting, init;
-	getFilteredInventory = function(dbFilterUpperCase) {
-		    var result = [],
-                arr = configMap.inventory,
-				func, i, val;
-			func = function(arrVal, dbFilterUc) {
-				return arrVal.name.slice(0, dbFilterUc.length).toUpperCase() === dbFilterUc;
-			};
-			for (i = 0; i < arr.length; i++) {
-				val = arr[i];
-				if (func(val, dbFilterUpperCase)) {
-					result.push(val);
+        getFilterRenderMap, getSortingRenderMap, getInitRenderMap, render, onClickBtnFilter, onClickToggleSorting, init;
+	getFilterRenderMap = function(dbFilterUpperCase) {
+		var filterRenderMap = [],
+			keyValue = 'name',
+			filterFunc, id, product;
+		filterFunc = function(prodEntry, dbFilterUc) {
+			return prodEntry.keyValue.slice(0, dbFilterUc.length).toUpperCase() === dbFilterUc;
+		};
+        for (id in configMap.inventory) {
+            if (configMap.inventory.hasOwnProperty(id)) {
+                product = configMap.inventory[id];
+				if (filterFunc(product, dbFilterUpperCase)) {
+					configMap.makeRenderMap(filterRenderMap, {
+						id: product.id,
+						keyValue: product[keyValue]
+					});
 				}
-			}
-			return result;
+            }
+        }
+		return filterRenderMap;
 	};
-    configSorting = function() {
+    getSortingRenderMap = function() {
         var glyphiconToggle = this.firstElementChild,
             sortingFeature,
-            sortingFunc = function(prodA, prodB) {
-                return prodA.name.toUpperCase() < prodB.name.toUpperCase() ? -1 : 1;
-            };
+            sortingFunc = function (prodEntryA, prodEntryB) {
+                return prodEntryA.keyValue.toUpperCase() < prodEntryB.keyValue.toUpperCase() ? -1 : 1;
+            },
+			sortingRenderMap = [],
+            keyValue = 'name',
+            id, product;
         switch (this.id) {
             case "toggleName":
                 sortingName = !sortingName;
@@ -35,42 +44,67 @@
                 break;
             case "togglePrice":
                 sortingFunc = function(prodA, prodB) {
-                    return prodA.price < prodB.price ? -1 : 1;
+                    return prodA.keyValue < prodB.keyValue ? -1 : 1;
                 };
+                keyValue = 'price';
                 sortingPrice = !sortingPrice;
                 sortingFeature = sortingPrice;
             default:
                 break;
         }
-        configMap.inventory.sort(sortingFunc);
+        for (id in configMap.inventory) {
+            if (configMap.inventory.hasOwnProperty(id)) {
+                product = configMap.inventory[id];
+                configMap.makeRenderMap(sortingRenderMap, {
+                    id: product.id,
+                    keyValue: product[keyValue]
+                });
+            }
+        }
+        sortingRenderMap.sort(sortingFunc);
         if (sortingFeature) {
-            configMap.inventory.reverse();
+            sortingRenderMap.reverse();
             glyphiconToggle.className = glyphiconBottomClass;
         } else {
             glyphiconToggle.className = glyphiconTopClass;
         }
+        return sortingRenderMap;
     };
-    render = function (inventory) {
-        var tbodyElement, tableRows;
+	getInitRenderMap = function() {
+		var initRenderMap = [],
+			keyValue = 'name',
+            id, product;
+        for (id in configMap.inventory) {
+            if (configMap.inventory.hasOwnProperty(id)) {
+                product = configMap.inventory[id];
+                configMap.makeRenderMap(initRenderMap, {
+                    id: product.id,
+                    keyValue: product[keyValue]
+                });
+            }
+        }
+		return initRenderMap;
+	};
+    render = function (inventory, renderMap) {
+        var tbodyElement, tableRows, i;
         tbodyElement = $('#tbodyElement')[0];
         tableRows = document.createDocumentFragment();
         $(tbodyElement).empty();
-        inventory.forEach(app.utilBrowser.appendTableRow, tableRows);
+		for (i = 0; i < renderMap.length; i++) {
+			app.utilBrowser.appendTableRow.call(tableRows, configMap.inventory, renderMap[i]);
+		}
         $(tbodyElement).append(tableRows);
     };
 	onClickBtnFilter = function() {
-		var filteredInventory,
-			dbFilter = document.forms.filterAndAddForm.filterName,
+		var dbFilter = document.forms.filterAndAddForm.filterName,
 			dbFilterUpperCase = dbFilter.value.toUpperCase();
         if (dbFilterUpperCase.trim()) {
-            filteredInventory = getFilteredInventory(dbFilterUpperCase);
-			render(filteredInventory);
+			render(configMap.inventory, getFilterRenderMap(dbFilterUpperCase));
         }
 	};
     onClickToggleSorting = function() {
 		var selfOwn = this;
-        configSorting.call(selfOwn);
-        render(configMap.inventory);
+		render(configMap.inventory, getSortingRenderMap.call(selfOwn));
     };
     init = function() {
 		var dbBtnFilter = document.forms.filterAndAddForm.filterProduct,
@@ -79,7 +113,7 @@
 		$(dbBtnFilter).click(onClickBtnFilter);
         $(toggleName).click(onClickToggleSorting);
         $(togglePrice).click(onClickToggleSorting);
-        render(configMap.inventory);
+		render(configMap.inventory, getInitRenderMap());
     };
     return {
         init: init

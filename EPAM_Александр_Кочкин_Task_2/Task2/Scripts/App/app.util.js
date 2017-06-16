@@ -1,5 +1,15 @@
-﻿app.util = function() {
-    var setConfigMap;
+﻿app.util = (function() {
+    var makeRenderMap, setConfigMap;
+	makeRenderMap = function(renderMap, productEntry) {
+		var id = productEntry.id,
+			keyValue = productEntry.keyValue,
+			mapEntry;
+		mapEntry = new Object(); 
+		mapEntry.id = id;
+		mapEntry.keyValue = keyValue;
+		renderMap.push(mapEntry);
+		return mapEntry;
+	};
     setConfigMap = function(argMap) {
         var inputMap = argMap.inputMap,
             settableMap = argMap.settableMap,
@@ -13,5 +23,8 @@
             }
         }
     };
-    return { setConfigMap: setConfigMap };
-};
+    return {
+		makeRenderMap: makeRenderMap,
+		setConfigMap: setConfigMap
+	};
+})();

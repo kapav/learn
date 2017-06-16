@@ -1,24 +1,17 @@
-﻿app.utilBrowser = (function () {
+﻿app.utilBrowser = (function() {
     var appendTableRow;
-    appendTableRow = function(prod) {
+    appendTableRow = function(inventory, productEntry) {
         var templRow, trInnerBlock, trElem;
-        prod.formatterUsdCur = new Intl.NumberFormat("en-US",
-        {
-            style: "currency",
-            currency: "USD"
-        });
         $.ajax({
             url: 'HTML/row.html',
-            method: 'GET',
-            dataType: 'html',
             async: false,
             success: function (data) {
                 templRow = data;
             }
         });
-        trInnerBlock = _.template(templRow)(prod);
+        trInnerBlock = _.template(templRow)(inventory[productEntry.id]);
         trElem = $(document.createElement("tr")).html(trInnerBlock)[0];
-        trElem.id = "row" + prod.id;
+        trElem.id = "row" + productEntry.id;
 
         $(this).append(trElem);
     };

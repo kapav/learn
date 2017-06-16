@@ -76,6 +76,7 @@
     <Content Include="Scripts\App\app.storage.js" />
     <Content Include="Scripts\App\app.utilBrowser.js" />
     <Content Include="Scripts\App\app.util.js" />
+    <Content Include="Scripts\App\app.utilRenderMap.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />
     <None Include="Web.Debug.config">

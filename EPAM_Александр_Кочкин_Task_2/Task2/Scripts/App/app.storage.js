@@ -1,9 +1,15 @@
 ﻿app.storage = (function() {
-    var stateMap = {
+    var configMap = {
+            getFilterRenderMap: app.utilRenderMap.getFilterRenderMap,
+            getSortingRenderMap: app.utilRenderMap.getSortingRenderMap,
+            getInitRenderMap: app.utilRenderMap.getInitRenderMap,
+		},
+		stateMap = {
             idSerial: 5,
-            inventoryDb: {}
+            inventoryDb: {},
+			renderMap: null
         },
-        makeId, makeProduct, dropProduct, inventory, init;
+        makeId, makeProduct, dropProduct, inventory, init, getRenderMap;
     function Product() {
         Product.prototype.formatterUsdCur = new Intl.NumberFormat("en-US",
         {
@@ -33,15 +39,34 @@
 
         return true;
     };
+	getRenderMap = function(kindOfRenderMap, dbFilterUpperCase) {
+		var selfOwn = this;
+        switch (kindOfRenderMap) {
+            case 'filter':
+                stateMap.renderMap = configMap.getFilterRenderMap(stateMap.inventoryDb, stateMap.renderMap, dbFilterUpperCase);
+				return stateMap.renderMap;
+				break;
+            case 'sorting':
+                return configMap.getSortingRenderMap.call(selfOwn, stateMap.renderMap);
+                break;
+            case 'init':
+                stateMap.renderMap = configMap.getInitRenderMap(stateMap.inventoryDb);
+				return stateMap.renderMap;
+                break;
+            default:
+                break;
+        }
+	};
     inventory = {
-        getDb: function() { return stateMap.inventoryDb; }
+        getDb: function() { return stateMap.inventoryDb; },
+		getRenderMap: getRenderMap
     };
     init = function() {
-        var id, inventoryList, product;
-        inventoryList = app.fakeData.getInventoryList();
-        for (id in inventoryList) {
-            if (inventoryList.hasOwnProperty(id)) {
-                product = inventoryList[id];
+        var id, productList, product;
+        productList = app.fakeData.getProductList();
+        for (id in productList) {
+            if (productList.hasOwnProperty(id)) {
+                product = productList[id];
                 makeProduct({
                     id: product.id,
                     name: product.name,

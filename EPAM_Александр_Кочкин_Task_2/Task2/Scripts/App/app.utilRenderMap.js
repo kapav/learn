@@ -4,38 +4,41 @@
         },
         sortingName = false,
         sortingPrice = false,
-        getFilterRenderMap, getSortingRenderMap, getInitRenderMap;
-    getFilterRenderMap = function (inventory, dbFilterUpperCase) {
+        getFilterRenderMapHelper, getFilterRenderMap, getSortingRenderMap, getInitRenderMap;
+    getFilterRenderMapHelper = function (inventory, dbFilterUpperCase) {
         var filterRenderMap = [],
-			keyValue = 'name',
-			filterFunc, id, product;
-        filterFunc = function (prodEntry, dbFilterUpperCase) {
-            return prodEntry.keyValue.slice(0, dbFilterUpperCase.length).toUpperCase() === dbFilterUpperCase;
+            filterFunc, id, product;
+        filterFunc = function (prodEntry) {
+            return prodEntry.name.slice(0, dbFilterUpperCase.length).toUpperCase() === dbFilterUpperCase;
         };
         for (id in inventory) {
             if (inventory.hasOwnProperty(id)) {
-                product = configMap.inventory[id];
-                if (filterFunc(product, dbFilterUpperCase)) {
-                    configMap.makeRenderMap(filterRenderMap, {
-                        id: product.id,
-                        keyValue: product[keyValue]
-                    });
-                }
+				product = inventory[id];
+				configMap.makeRenderMap(filterRenderMap, {
+				    id: product.id,
+				    name: product.name,
+				    price: product.price
+				});
             }
         }
-        return filterRenderMap;
+        return filterRenderMap.filter(filterFunc);
     };
-    getSortingRenderMap = function (inventory) {
+	getFilterRenderMap = function (inventory, renderMap, dbFilterUpperCase) {
+		if (dbFilterUpperCase.trim()) {
+			return getFilterRenderMapHelper(inventory, dbFilterUpperCase);
+		} else if (Object.keys(inventory).length > renderMap.length) {
+		    return getInitRenderMap(inventory);
+        }
+		return renderMap;
+	};
+    getSortingRenderMap = function (sortingRenderMap) {
         var glyphiconToggle = this.firstElementChild,
             glyphiconTopClass = "glyphicon glyphicon-triangle-top",
             glyphiconBottomClass = "glyphicon glyphicon-triangle-bottom",
             sortingFeature,
             sortingFunc = function (prodEntryA, prodEntryB) {
-                return prodEntryA.keyValue.toUpperCase() < prodEntryB.keyValue.toUpperCase() ? -1 : 1;
-            },
-			sortingRenderMap = [],
-            keyValue = 'name',
-            id, product;
+                return prodEntryA.name.toUpperCase() < prodEntryB.name.toUpperCase() ? -1 : 1;
+            };
         switch (this.id) {
             case "toggleName":
                 sortingName = !sortingName;
@@ -43,22 +46,12 @@
                 break;
             case "togglePrice":
                 sortingFunc = function (prodA, prodB) {
-                    return prodA.keyValue < prodB.keyValue ? -1 : 1;
+                    return prodA.price < prodB.price ? -1 : 1;
                 };
-                keyValue = 'price';
                 sortingPrice = !sortingPrice;
                 sortingFeature = sortingPrice;
             default:
                 break;
-        }
-        for (id in inventory) {
-            if (inventory.hasOwnProperty(id)) {
-                product = inventory[id];
-                configMap.makeRenderMap(sortingRenderMap, {
-                    id: product.id,
-                    keyValue: product[keyValue]
-                });
-            }
         }
         sortingRenderMap.sort(sortingFunc);
         if (sortingFeature) {
@@ -67,18 +60,18 @@
         } else {
             glyphiconToggle.className = glyphiconTopClass;
         }
-        return sortingRenderMap;
+		return sortingRenderMap;
     };
     getInitRenderMap = function (inventory) {
         var initRenderMap = [],
-			keyValue = 'name',
             id, product;
         for (id in inventory) {
             if (inventory.hasOwnProperty(id)) {
                 product = inventory[id];
                 configMap.makeRenderMap(initRenderMap, {
                     id: product.id,
-                    keyValue: product[keyValue]
+					name: product.name,
+					price: product.price
                 });
             }
         }

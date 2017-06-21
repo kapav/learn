@@ -2,11 +2,13 @@
     var makeRenderMap, setConfigMap;
 	makeRenderMap = function(renderMap, productEntry) {
 		var id = productEntry.id,
-			keyValue = productEntry.keyValue,
+			name = productEntry.name,
+			price = productEntry.price,
 			mapEntry;
 		mapEntry = new Object(); 
 		mapEntry.id = id;
-		mapEntry.keyValue = keyValue;
+		mapEntry.name = name;
+		mapEntry.price = price;
 		renderMap.push(mapEntry);
 		return mapEntry;
 	};

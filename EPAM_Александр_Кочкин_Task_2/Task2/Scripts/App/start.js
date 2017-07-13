@@ -1,3 +1,3 @@
 ﻿(function() {
-    $(window).on("load", app.init($('#app')));
+    $(window).on('load', app.init($('#app')));
 })();

@@ -1,16 +1,18 @@
 ﻿app.util = (function() {
-    var makeRenderMap, setConfigMap;
-	makeRenderMap = function(renderMap, productEntry) {
+    var filterFunc, makeRenderMapEntry, setConfigMap;
+    filterFunc = function (dbFilterUpperCase, productEntry) {
+        return productEntry.name.slice(0, dbFilterUpperCase.length).toUpperCase() === dbFilterUpperCase;
+    };
+	makeRenderMapEntry = function(renderMap, productEntry) {
 		var id = productEntry.id,
 			name = productEntry.name,
 			price = productEntry.price,
-			mapEntry;
-		mapEntry = new Object(); 
-		mapEntry.id = id;
-		mapEntry.name = name;
-		mapEntry.price = price;
-		renderMap.push(mapEntry);
-		return mapEntry;
+			renderMapEntry;
+		renderMapEntry = new Object(); 
+		renderMapEntry.id = id;
+		renderMapEntry.name = name;
+		renderMapEntry.price = price;
+		renderMap.push(renderMapEntry);
 	};
     setConfigMap = function(argMap) {
         var inputMap = argMap.inputMap,
@@ -26,7 +28,8 @@
         }
     };
     return {
-		makeRenderMap: makeRenderMap,
+        filterFunc: filterFunc,
+		makeRenderMapEntry: makeRenderMapEntry,
 		setConfigMap: setConfigMap
 	};
 })();

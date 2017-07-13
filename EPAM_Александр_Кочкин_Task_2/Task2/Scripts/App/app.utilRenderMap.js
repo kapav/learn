@@ -1,50 +1,40 @@
 ﻿app.utilRenderMap = (function() {
     var configMap = {
-            makeRenderMap: app.util.makeRenderMap
+            filterFunc: app.util.filterFunc,
+            makeRenderMapEntry: app.util.makeRenderMapEntry
         },
         sortingName = false,
         sortingPrice = false,
-        getFilterRenderMapHelper, getFilterRenderMap, getSortingRenderMap, getInitRenderMap;
-    getFilterRenderMapHelper = function (inventory, dbFilterUpperCase) {
+        makeFilterRenderMap, makeSortingRenderMap, makeInitRenderMap;
+    makeFilterRenderMap = function (inventory, dbFilterUpperCase) {
         var filterRenderMap = [],
-            filterFunc, id, product;
-        filterFunc = function (prodEntry) {
-            return prodEntry.name.slice(0, dbFilterUpperCase.length).toUpperCase() === dbFilterUpperCase;
-        };
+            id, product;
         for (id in inventory) {
             if (inventory.hasOwnProperty(id)) {
 				product = inventory[id];
-				configMap.makeRenderMap(filterRenderMap, {
+				configMap.makeRenderMapEntry(filterRenderMap, {
 				    id: product.id,
 				    name: product.name,
 				    price: product.price
 				});
             }
         }
-        return filterRenderMap.filter(filterFunc);
+        return filterRenderMap.filter(configMap.filterFunc.bind(null, dbFilterUpperCase));
     };
-	getFilterRenderMap = function (inventory, renderMap, dbFilterUpperCase) {
-		if (dbFilterUpperCase.trim()) {
-			return getFilterRenderMapHelper(inventory, dbFilterUpperCase);
-		} else if (Object.keys(inventory).length > renderMap.length) {
-		    return getInitRenderMap(inventory);
-        }
-		return renderMap;
-	};
-    getSortingRenderMap = function (sortingRenderMap) {
+    makeSortingRenderMap = function (sortingRenderMap) {
         var glyphiconToggle = this.firstElementChild,
-            glyphiconTopClass = "glyphicon glyphicon-triangle-top",
-            glyphiconBottomClass = "glyphicon glyphicon-triangle-bottom",
+            glyphiconTopClass = 'glyphicon glyphicon-triangle-top',
+            glyphiconBottomClass = 'glyphicon glyphicon-triangle-bottom',
             sortingFeature,
             sortingFunc = function (prodEntryA, prodEntryB) {
                 return prodEntryA.name.toUpperCase() < prodEntryB.name.toUpperCase() ? -1 : 1;
             };
         switch (this.id) {
-            case "toggleName":
+            case 'toggleName':
                 sortingName = !sortingName;
                 sortingFeature = sortingName;
                 break;
-            case "togglePrice":
+            case 'togglePrice':
                 sortingFunc = function (prodA, prodB) {
                     return prodA.price < prodB.price ? -1 : 1;
                 };
@@ -62,13 +52,13 @@
         }
 		return sortingRenderMap;
     };
-    getInitRenderMap = function (inventory) {
+    makeInitRenderMap = function (inventory) {
         var initRenderMap = [],
             id, product;
         for (id in inventory) {
             if (inventory.hasOwnProperty(id)) {
                 product = inventory[id];
-                configMap.makeRenderMap(initRenderMap, {
+                configMap.makeRenderMapEntry(initRenderMap, {
                     id: product.id,
 					name: product.name,
 					price: product.price
@@ -78,8 +68,8 @@
         return initRenderMap;
     };
     return {
-        getFilterRenderMap: getFilterRenderMap,
-        getSortingRenderMap: getSortingRenderMap,
-        getInitRenderMap: getInitRenderMap
+        makeFilterRenderMap: makeFilterRenderMap,
+        makeSortingRenderMap: makeSortingRenderMap,
+        makeInitRenderMap: makeInitRenderMap
     };
 })();

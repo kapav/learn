@@ -1,6 +1,6 @@
 ﻿app.utilBrowser = (function() {
     var appendTableRow, render;
-    appendTableRow = function(inventory, productEntry) {
+    appendTableRow = function(productEntry) {
         var templRow, trInnerBlock, trElem;
         $.ajax({
             url: 'HTML/row.html',
@@ -9,19 +9,17 @@
                 templRow = data;
             }
         });
-        trInnerBlock = _.template(templRow)(inventory[productEntry.id]);
+        trInnerBlock = _.template(templRow)(productEntry);
         trElem = $(document.createElement("tr")).html(trInnerBlock)[0];
-        trElem.id = "row" + productEntry.id;
 
         $(this).append(trElem);
     };
-    render = function (inventory, renderMap) {
-        var tbodyElement, tableRows, i;
-        tbodyElement = $('#tbodyElement')[0];
+    render = function (inventory, renderMap, tbodyElement) {
+        var tableRows, i;
         tableRows = document.createDocumentFragment();
         $(tbodyElement).empty();
         for (i = 0; i < renderMap.length; i++) {
-            appendTableRow.call(tableRows, inventory, renderMap[i]);
+            appendTableRow.call(tableRows, inventory[renderMap[i].id]);
         }
         $(tbodyElement).append(tableRows);
     };

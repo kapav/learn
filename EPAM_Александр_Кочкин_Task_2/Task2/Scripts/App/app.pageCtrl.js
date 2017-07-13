@@ -5,7 +5,8 @@
         stateMap = {
             $container: null
         },
-        bodyInnerBlock, init;
+        jqueryMap = {},
+        setJqueryMap, bodyInnerBlock, init;
     $.ajax({
         url: 'HTML/main.html',
         async: false,
@@ -13,13 +14,21 @@
             configMap.mainHtml = data;
         }
     });
+    setJqueryMap = function() {
+        var $container = stateMap.$container;
+        jqueryMap = {
+            $container: $container,
+            $tbodyElement: $($container).find('#tbodyElement')[0]
+        };
+    };
     init = function ($container) {
 		var templBody;
         templBody = configMap.mainHtml;
         bodyInnerBlock = _.template(templBody)();
         stateMap.$container = $container;
         $container.html(bodyInnerBlock);
-        app.pageView.init();
+        setJqueryMap();
+        app.pageView.init(jqueryMap.$tbodyElement);
     };
     return {
         init: init

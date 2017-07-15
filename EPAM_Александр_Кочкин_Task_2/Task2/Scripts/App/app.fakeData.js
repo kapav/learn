@@ -22,15 +22,37 @@
             callbackMap[msgType] = callback;
         };
         emitIo = function(msgType, data) {
-            if (msgType === 'addProduct' && callbackMap.productUpdate) {
-                setTimeout(function() {
-                    callbackMap.productUpdate([{
-                        id: makeFakeId(),
-                        name: data.name,
-                        count: data.count,
-                        price: data.price
-                    }]);
-                }, 3000);
+            var id, name, count, price;
+            switch (msgType) {
+                case 'addProduct':
+                    if (callbackMap.productUpdate) {
+                        setTimeout(function () {
+                            id = makeFakeId();
+                            name = data.name;
+                            count = data.count;
+                            price = data.price;
+                            stateMap.productList[id] = {
+                                id: id,
+                                name: name,
+                                count: count,
+                                price: price
+                            };
+                            callbackMap.productUpdate([{
+                                id: id,
+                                name: name,
+                                count: count,
+                                price: price
+                            }]);
+                        }, 3000);
+                    }
+                    break;
+                case 'dropProduct':
+                    setTimeout(function () {
+                        delete stateMap.productList[data.id];
+                    }, 3000);
+                    break;
+                default:
+                    break;
             }
         };
         return {

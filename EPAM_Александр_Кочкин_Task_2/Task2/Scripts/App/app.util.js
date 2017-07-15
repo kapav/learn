@@ -1,14 +1,20 @@
 ﻿app.util = (function() {
-    var filterFunc, makeRenderMapEntry, setConfigMap;
+    var filterFunc, getIndex, makeRenderMapEntry, setConfigMap;
     filterFunc = function (dbFilterUpperCase, productEntry) {
         return productEntry.name.slice(0, dbFilterUpperCase.length).toUpperCase() === dbFilterUpperCase;
     };
-	makeRenderMapEntry = function(renderMap, productEntry) {
+    getIndex = function(renderMap, productId) {
+        for (var i = 0; i < renderMap.length; i++) {
+            if (renderMap[i].id === productId) { return i; }
+        }
+        return -1;
+    }
+    makeRenderMapEntry = function(renderMap, productEntry) {
 		var id = productEntry.id,
 			name = productEntry.name,
 			price = productEntry.price,
 			renderMapEntry;
-		renderMapEntry = new Object(); 
+		renderMapEntry = {}; 
 		renderMapEntry.id = id;
 		renderMapEntry.name = name;
 		renderMapEntry.price = price;
@@ -29,6 +35,7 @@
     };
     return {
         filterFunc: filterFunc,
+        getIndex: getIndex,
 		makeRenderMapEntry: makeRenderMapEntry,
 		setConfigMap: setConfigMap
 	};

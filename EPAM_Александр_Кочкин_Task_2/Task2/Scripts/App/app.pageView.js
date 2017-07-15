@@ -23,7 +23,7 @@
 		renderMap = configMap.makeRenderMap.call(selfOwn, kindOfRenderMap);
 		configMap.render(configMap.inventory, renderMap, configMap.tbodyElement);
     };
-    init = function(tbodyElement) {
+    init = function (tbodyElement) {
         var dbBtnFilter = document.forms.filterAndAddForm.filterProduct,
 			toggleName = document.forms.toggleNameForm.toggleName,
 			togglePrice = document.forms.togglePriceForm.togglePrice,

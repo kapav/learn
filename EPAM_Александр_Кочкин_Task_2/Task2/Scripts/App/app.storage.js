@@ -7,14 +7,12 @@
             makeInitRenderMap: app.utilRenderMap.makeInitRenderMap
 		},
 		stateMap = {
-            //idSerial: 5,
             renderMap: null,
             inventoryDb: {},
             product: null,
             dbFilterUpperCase: null
         },
-        completeAdd, makeProduct, dropProduct, inventory, init;
-		//add, drop, edit;
+        completeAdd, makeProduct, inventory, init;
     function Product() {
         Product.prototype.formatterUsdCur = new Intl.NumberFormat("en-US",
         {
@@ -23,13 +21,12 @@
         });
     }
     completeAdd = function(productList) {
-        //stateMap.inventoryDb, stateMap.renderMap, хвост таблицы в вёрстке
-        var product = null,
-            productMap = productList[0];
+        var productMap = productList[0],
+            product;
         product = makeProduct(productMap);
         if (!stateMap.dbFilterUpperCase || configMap.filterFunc(stateMap.dbFilterUpperCase, productMap)) {
             configMap.makeRenderMapEntry(stateMap.renderMap, productMap);
-            $.gevent.publish('appAdd', [product]);
+            $.gevent.publish('appAdd', product);
         }
     };
     makeProduct = function(productMap) {
@@ -46,13 +43,8 @@
         stateMap.inventoryDb[id] = product;
         return product;
     };
-    dropProduct = function(product) {
-        if (!product) { return false; }
-
-        return true;
-    };
 	inventory = (function () {
-	    var makeRenderMap, getDb, add;
+	    var makeRenderMap, getDb, add, drop;
 	    makeRenderMap = function (kindOfRenderMap, dbFilterUpperCase) {
 	        var selfOwn = this;
 	        switch (kindOfRenderMap) {
@@ -91,10 +83,21 @@
 	            price: price
 	        });
 	    };
+	    drop = function(id) {
+	        var getIndex = app.util.getIndex,
+	            io = app.fakeData.mockIo;
+	        delete stateMap.inventoryDb[id];
+	        stateMap.renderMap.splice(getIndex(stateMap.renderMap, id), 1);
+	        io.emit('dropProduct',
+	        {
+	            id: id
+	        });
+	    };
 	    return {
             makeRenderMap: makeRenderMap,
             getDb: getDb,
-            add: add
+            add: add,
+            drop: drop
         };
     })();
     init = function() {

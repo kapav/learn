@@ -11,7 +11,6 @@
         });
         trInnerBlock = _.template(templRow)(productEntry);
         trElem = $(document.createElement("tr")).html(trInnerBlock)[0];
-
         $(this).append(trElem);
     };
     render = function (inventory, renderMap, tbodyElement) {

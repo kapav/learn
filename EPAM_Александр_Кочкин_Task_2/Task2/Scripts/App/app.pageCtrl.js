@@ -1,12 +1,13 @@
 ﻿app.pageCtrl = (function() {
     var configMap = {
-            mainHtml: null
+            mainHtml: null,
+            appendTableRow: app.utilBrowser.appendTableRow
         },
         stateMap = {
             $container: null
         },
         jqueryMap = {},
-        setJqueryMap, bodyInnerBlock, init;
+        setJqueryMap, onAdd, init;
     $.ajax({
         url: 'HTML/main.html',
         async: false,
@@ -21,14 +22,18 @@
             $tbodyElement: $($container).find('#tbodyElement')[0]
         };
     };
+    onAdd = function(event, addProduct) {
+        configMap.appendTableRow.call(jqueryMap.$tbodyElement, addProduct);
+    };
     init = function ($container) {
-		var templBody;
+        var templBody, bodyInnerBlock;
         templBody = configMap.mainHtml;
         bodyInnerBlock = _.template(templBody)();
         stateMap.$container = $container;
         $container.html(bodyInnerBlock);
         setJqueryMap();
         app.pageView.init(jqueryMap.$tbodyElement);
+        $.gevent.subscribe($container, 'appAdd', onAdd);
     };
     return {
         init: init

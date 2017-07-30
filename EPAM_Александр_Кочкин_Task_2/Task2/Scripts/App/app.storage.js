@@ -9,15 +9,14 @@
 		stateMap = {
             renderMap: null,
             inventoryDb: {},
-            product: null,
             dbFilterUpperCase: null
         },
         completeAdd, makeProduct, inventory, init;
     function Product() {
-        Product.prototype.formatterUsdCur = new Intl.NumberFormat("en-US",
+        Product.prototype.formatterUsdCur = new Intl.NumberFormat('en-US',
         {
-            style: "currency",
-            currency: "USD"
+            style: 'currency',
+            currency: 'USD'
         });
     }
     completeAdd = function(productList) {
@@ -73,21 +72,21 @@
 	        }
 	    };
 	    getDb = function () { return stateMap.inventoryDb; };
-	    add = function(name, count, price) {
+	    add = function(productAttributes) {
 	        var io = app.fakeData.mockIo;
 	        io.on('productUpdate', completeAdd);
 	        io.emit('addProduct',
 	        {
-	            name: name,
-	            count: count,
-	            price: price
+	            name: productAttributes.name,
+	            count: productAttributes.count,
+	            price: productAttributes.price
 	        });
 	    };
 	    drop = function(id) {
 	        var getIndex = app.util.getIndex,
 	            io = app.fakeData.mockIo;
 	        delete stateMap.inventoryDb[id];
-	        stateMap.renderMap.splice(getIndex(stateMap.renderMap, id), 1);
+	        stateMap.renderMap.splice(getIndex(stateMap.renderMap, +id), 1);
 	        io.emit('dropProduct',
 	        {
 	            id: id

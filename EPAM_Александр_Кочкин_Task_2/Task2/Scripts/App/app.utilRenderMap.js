@@ -1,4 +1,4 @@
-﻿app.utilRenderMap = (function() {
+﻿app.utilRenderMap = (function() { //Модуль создаёт карты отображения
     var configMap = {
             filterFunc: app.util.filterFunc,
             makeRenderMapEntry: app.util.makeRenderMapEntry
@@ -6,7 +6,8 @@
         sortingName = false,
         sortingPrice = false,
         makeFilterRenderMap, makeSortingRenderMap, makeInitRenderMap;
-    makeFilterRenderMap = function (inventory, dbFilterUpperCase) {
+		
+    makeFilterRenderMap = function (inventory, dbFilterUpperCase) { //Карта фильтрации
         var filterRenderMap = [],
             id, product;
         for (id in inventory) {
@@ -21,7 +22,8 @@
         }
         return filterRenderMap.filter(configMap.filterFunc.bind(null, dbFilterUpperCase));
     };
-    makeSortingRenderMap = function (sortingRenderMap) {
+	
+    makeSortingRenderMap = function (sortingRenderMap) { //Карта сортировки
         var glyphiconToggle = this.firstElementChild,
             glyphiconTopClass = 'glyphicon glyphicon-triangle-top',
             glyphiconBottomClass = 'glyphicon glyphicon-triangle-bottom',
@@ -52,7 +54,8 @@
         }
 		return sortingRenderMap;
     };
-    makeInitRenderMap = function (inventory) {
+	
+    makeInitRenderMap = function (inventory) { //Карта инициализации
         var initRenderMap = [],
             id, product;
         for (id in inventory) {
@@ -67,6 +70,7 @@
         }
         return initRenderMap;
     };
+	
     return {
         makeFilterRenderMap: makeFilterRenderMap,
         makeSortingRenderMap: makeSortingRenderMap,

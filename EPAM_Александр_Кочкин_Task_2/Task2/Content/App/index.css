@@ -20,3 +20,7 @@ div.row.row-above-table {
 table > tbody > tr > td.vertical-middle {
 	vertical-align: middle;
 }
+
+.conceal-text {
+	visibility: hidden;
+}

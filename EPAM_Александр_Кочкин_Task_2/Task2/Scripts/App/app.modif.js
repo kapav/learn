@@ -1,24 +1,39 @@
-﻿app.modif = (function() {
+﻿app.modif = (function() { //Модуль вносит изменения в хранимые товары и фильтры
     var configMap = {
+			resetError: app.utilBrowser.resetError,
             changeCheck: app.verif.changeCheck,
+			searchCheck: app.verifFilter.searchCheck,
+			render: app.utilBrowser.render,
             primaryButtonStyle: 'btn-primary',
             warningButtonStyle: 'btn-warning'
         },
         stateMap = {
+			$container: null,
+			$tbodyElement: null,
             inventory: null,
-            add: null,
-            drop: null,
+			filter: null,
+            addProduct: null,
+            dropProduct: null,
+			addFilter: null,
+			makeRenderMap: null,
             isUpdate: null,
             product: {},
             currentTr: null,
             dbBtnAdd: null,
             changeBtnInModal: null,
             dropBtnInModal: null,
+			dbBtnFilter: null,
             inputs: null
 		},
-		addRetrieve, editRetrieve, changePlace, dropRetrieve, dropPlace, tbodyClick, init;
+		resetErrors, addRetrieve, editRetrieve, dropRetrieve, dropPlace, tbodyClick, renderFilteredProducts, onProductAdd, onFilterAdd, init;
+		
+	resetErrors = function() { //Сброс ошибок текстовых полей
+	    configMap.resetError(stateMap.inputs.name);
+	    configMap.resetError(stateMap.inputs.count);
+	    configMap.resetError(stateMap.inputs.price);
+	};
 
-	addRetrieve = function() { // Подготавливает добавление товара.
+	addRetrieve = function() { //Подготавливает добавление товара
 	    stateMap.product.name = '';
 	    stateMap.product.count = '';
 	    stateMap.product.price = '';
@@ -27,15 +42,13 @@
 			.addClass(configMap.primaryButtonStyle)
 			.html('Add');
 	    stateMap.isUpdate = false;
+	    resetErrors();
 	    stateMap.inputs.name.value = '';
 	    stateMap.inputs.count.value = '';
 	    stateMap.inputs.price.value = '';
-	    $(stateMap.changeBtnInModal)
-            .off('click', configMap.changeCheck).on('click', configMap.changeCheck)
-            .off('click', changePlace).on('click', changePlace);
 	}
 	
-	editRetrieve = function (productId) { // Извлекает из хранилища сведения о товаре.
+	editRetrieve = function (productId) { //Извлекает из хранилища сведения о товаре
 	    stateMap.product.id = productId;
 	    stateMap.product.name = stateMap.inventory[productId].name;
 	    stateMap.product.count = stateMap.inventory[productId].count;
@@ -45,31 +58,22 @@
 			.addClass(configMap.warningButtonStyle)
 			.html('Update');
 	    stateMap.isUpdate = true;
+	    resetErrors();
 	    stateMap.inputs.name.value = stateMap.product.name;
 	    stateMap.inputs.count.value = stateMap.product.count;
 	    stateMap.inputs.price.value = stateMap.product.price;
-	    $(stateMap.changeBtnInModal)
-            .off('click', configMap.changeCheck).on('click', configMap.changeCheck)
-            .off('click', changePlace).on('click', changePlace);
 	}
 	
-	changePlace = function() { // Размещает сведения о товаре в хранилище.
-	    if (stateMap.isUpdate) {
-	        dropPlace();
-	    }
-    }
-
-    dropRetrieve = function(productId) { // Извлекает удаляемый товар.
+    dropRetrieve = function(productId) { //Извлекает удаляемый товар
         stateMap.product.id = productId;
-        $(stateMap.dropBtnInModal).off('click', dropPlace).on('click', dropPlace);
     }
 
-    dropPlace = function() { // Удаляет из хранилища объект товара.
-        stateMap.drop(stateMap.product.id);
+    dropPlace = function() { //Удаляет из хранилища и вёрстки объект товара
+        stateMap.dropProduct(stateMap.product.id);
         $(stateMap.currentTr).remove();
     }
-
-    tbodyClick = function(event) { // Кнопки редактирования или удаления.
+	
+    tbodyClick = function(event) { //Кнопки редактирования или удаления
         var buttonId = event.target.id,
             productId = buttonId.substring(11);
 
@@ -86,14 +90,65 @@
         }
     }
 	
-    init = function (inventory, add, drop, changeBtnInModal, dropBtnInModal, inputs) {
-	    stateMap.inventory = inventory;
-	    stateMap.add = add;
-	    stateMap.drop = drop;
-	    stateMap.changeBtnInModal = changeBtnInModal;
-	    stateMap.dropBtnInModal = dropBtnInModal;
-	    stateMap.inputs = inputs;
-	    app.verif.init(stateMap.add, stateMap.product, stateMap.inputs);
+	renderFilteredProducts = function() { //Отображает товары с применённым фильтром
+		var dbFilterUpperCase = stateMap.filter.toUpperCase(),
+			kindOfRenderMap = 'filter',
+			renderMap;
+		renderMap = stateMap.makeRenderMap(kindOfRenderMap, dbFilterUpperCase);
+		if (renderMap) {
+			configMap.render(stateMap.inventory, renderMap, stateMap.$tbodyElement);
+		}
+	};
+	
+	onProductAdd = function() { //Удаляет старый товар при редактировании
+		if (stateMap.isUpdate) {
+			stateMap.dropProduct(stateMap.product.id);
+			$(stateMap.currentTr).remove();
+		}
+	};
+
+	onFilterAdd = function(event, addFilter) { //Обрабатывает добавление фильтра
+		stateMap.filter = addFilter;
+	};
+	
+    init = function(args) {
+		var selfOwn = this,
+			productParams, filterParams;
+		stateMap.$container = args.$container;
+		stateMap.$tbodyElement = args.$tbodyElement;
+	    stateMap.inventory = args.inventory;
+		stateMap.filter = args.filterInventory[0].filter;
+	    stateMap.addProduct = args.addProduct;
+	    stateMap.dropProduct = args.dropProduct;
+		stateMap.addFilter = args.addFilter;
+		stateMap.makeRenderMap = args.makeRenderMap;
+	    stateMap.changeBtnInModal = args.changeBtnInModal;
+	    stateMap.dropBtnInModal = args.dropBtnInModal;
+		stateMap.dbBtnFilter = args.dbBtnFilter;
+	    stateMap.inputs = args.inputs;
+		stateMap.inputs.filter.value = stateMap.filter;
+		productParams = {
+			add: stateMap.addProduct,
+			product: stateMap.product,
+			inputs: {
+				name: stateMap.inputs.name,
+				count: stateMap.inputs.count,
+				price: stateMap.inputs.price
+			}
+		};
+	    app.verif.init(productParams);
+		filterParams = {
+			add: stateMap.addFilter,
+			inputFilter: stateMap.inputs.filter 
+		};
+		app.verifFilter.init(filterParams);
+		$(stateMap.changeBtnInModal).on('click', configMap.changeCheck.bind(selfOwn, stateMap.isUpdate, stateMap.currentTr)); //
+		$(stateMap.dropBtnInModal).on('click', dropPlace);
+		$(stateMap.dbBtnFilter)
+			.on('click', configMap.searchCheck)
+			.on('click', renderFilteredProducts);
+		$.gevent.subscribe(stateMap.$container, 'productAdd', onProductAdd);
+		$.gevent.subscribe(stateMap.$container, 'filterAdd', onFilterAdd);
     };
 	
 	return {

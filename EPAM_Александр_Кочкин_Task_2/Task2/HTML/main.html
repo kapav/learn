@@ -24,7 +24,7 @@
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control" id="changeName" name="changeName" placeholder="Имя товара" autofocus />
-                                                <span class="error-msg text-hide">Текст</span>
+                                                <span class="error-msg conceal-text">Текст</span>
                                             </div>
                                             <div class="col-lg-6">
                                                 <p class="form-control-static">
@@ -46,7 +46,7 @@
                                         <div class="row">
                                             <div class="col-lg-3">
                                                 <input type="text" class="form-control" id="changeCount" name="changeCount" placeholder="Количество" />
-                                                <span class="error-msg text-hide">Текст</span>
+                                                <span class="error-msg conceal-text">Текст</span>
                                             </div>
                                         </div>
                                     </div>
@@ -63,7 +63,7 @@
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <input type="text" class="form-control" id="changePrice" name="changePrice" placeholder="Цена товара" />
-                                                <span class="error-msg text-hide">Текст</span>
+                                                <span class="error-msg conceal-text">Текст</span>
                                             </div>
                                         </div>
                                     </div>
@@ -73,7 +73,7 @@
                                 <div class="container-fluid">
                                     <div class="row">
                                         <div class="col-lg-4">
-                                            <button type="button" id="changeInModal" class="btn btn-primary btn-lg btn-block" data-dismiss="modal" data-is-update="0" data-prod-id-in-obj="0">Add</button>
+                                            <button type="button" id="changeInModal" class="btn btn-primary btn-lg btn-block" data-dismiss="modal" >Add</button>
                                         </div>
                                     </div>
                                 </div>
@@ -103,7 +103,7 @@
                                     <div class="row">
                                         <div class="col-lg-offset-1 col-lg-5">
                                             <!--Кнопка удаления в модальном-->
-                                            <button id="dropInModal" type="button" name="prodDropInModal" class="btn btn-danger btn-lg btn-block" data-dismiss="modal">Yes</button>
+                                            <button id="dropInModal" type="button" class="btn btn-danger btn-lg btn-block" data-dismiss="modal">Yes</button>
                                         </div>
                                         <div class="col-lg-5">
                                             <button type="button" class="btn btn-primary btn-lg btn-block" data-dismiss="modal">No</button>
@@ -125,7 +125,7 @@
         <form name="filterAndAddForm">
             <div class="col-lg-5">
                 <!--Значение для фильтрации-->
-                <input type="text" class="form-control input-lg" name="filterName" placeholder="Фильтр по подстроке с именем товара" value="" />
+                <input type="text" class="form-control input-lg" name="filterName" placeholder="Фильтр по подстроке с именем товара" id="filterInput" />
             </div>
             <div class="col-lg-2">
                 <!--Кнопка поиска-->
@@ -136,7 +136,7 @@
                 <button type="button" class="btn btn-primary btn-lg btn-block" id="addProduct" data-toggle="modal" data-target="#changeModal" data-backdrop="static">Add New</button>
             </div>
         </form>
-        <span class="error-msg text-hide">Текст</span>
+        <span class="error-msg conceal-text">Текст</span>
     </div>
 </div>
 <div>

@@ -1,4 +1,4 @@
-﻿app.verif = (function() {
+﻿app.verif = (function() { //Модуль проверки при добавлении товара
     var configMap = {
             showError: app.utilBrowser.showError,
             resetError: app.utilBrowser.resetError,
@@ -23,9 +23,9 @@
             product: null,
             inputs: null
         },
-        nameFormat, nameCheck, nameDeny, countFormat, countCheck, countDeny, priceRegain, priceFormat, priceCheck, priceDeny, proprietyControl, changeCheck, init;
+        nameFormat, nameDeny, nameCheck, countFormat, countDeny, countCheck, priceRegain, priceFormat, priceDeny, priceCheck, proprietyControl, changeCheck, init;
 
-    nameFormat = function(event) { // Проверка символов по одному.
+    nameFormat = function(event) { //Проверка символов по одному
         var e = event || window.event,
             code = e.charCode || e.keyCode,
             nameSymbol;
@@ -49,7 +49,20 @@
         e.preventDefault();
     };
 
-    nameCheck = function() { // Проверка по завершении редактирования.
+    nameDeny = function(event) { //Запрещение копирования из буфера обмена
+        var clipboardData = event.originalEvent.clipboardData || window.clipboardData,
+            pastedData;
+        pastedData = clipboardData.getData('text');
+        configMap.resetError(stateMap.inputs.name);
+        if (!configMap.isAcceptableNameString.test(pastedData)) {
+            configMap.showError(stateMap.inputs.name, '* Нельзя копировать из буфера обмена недопустимые символы');
+        } else {
+            return;
+        }
+        event.preventDefault();
+    }
+
+    nameCheck = function() { //Проверка по завершении редактирования
         var nameText = stateMap.inputs.name.value.trim(),
             emptyName = false;
         if (nameText === '') {
@@ -70,20 +83,7 @@
         }
     };
 
-    nameDeny = function(event) { // Запрещение копирования из буфера обмена.
-        var clipboardData = event.originalEvent.clipboardData || window.clipboardData,
-            pastedData;
-        pastedData = clipboardData.getData('text');
-        configMap.resetError(stateMap.inputs.name);
-        if (!configMap.isAcceptableNameString.test(pastedData)) {
-            configMap.showError(stateMap.inputs.name, '* Нельзя копировать из буфера обмена недопустимые символы');
-        } else {
-            return;
-        }
-        event.preventDefault();
-    }
-
-    countFormat = function(event) { // Проверка символов на цифры по одному.
+    countFormat = function(event) { //Проверка символов на цифры по одному
         var e = event || window.event,
             code = e.charCode || e.keyCode,
             countSymbol;
@@ -99,31 +99,44 @@
         if (!configMap.isAcceptableCountChar.test(countSymbol)) {
             configMap.showError(stateMap.inputs.count, '* Нужно вводить цифры');
         } else if (stateMap.inputs.count.value.length >= 15) {
-            configMap.showError(stateMap.inputs.count, '* Количество должно быть от 1 до 15 цифр');
+            configMap.showError(stateMap.inputs.count, '* Нужно от 1 до 15 цифр');
         } else {
             return;
         }
         e.preventDefault();
     }
 
-    countCheck = function() { // Проверка по завершении редактирования.
+    countDeny = function(event) { //Запрещение копирования из буфера обмена
+        var clipboardData = event.originalEvent.clipboardData || window.clipboardData,
+            pastedData;
+        pastedData = clipboardData.getData('text');
+        configMap.resetError(stateMap.inputs.count);
+        if (!configMap.isAcceptableCountString.test(pastedData)) {
+            configMap.showError(stateMap.inputs.count, '* Недопустимые символы');
+        } else {
+            return;
+        }
+        event.preventDefault();
+    }
+
+    countCheck = function() { //Проверка по завершении редактирования
         var countNumber = stateMap.inputs.count.value,
             emptyCount = false;
         if (countNumber === '') {
             emptyCount = true;
         }
 
-        countNumber = +countNumber; // Преобразование к числовому значению.
+        countNumber = +countNumber;
         configMap.resetError(stateMap.inputs.count);
         stateMap.flag.count = false;
 
         if (emptyCount) {
-            configMap.showError(stateMap.inputs.count, '* Введена пустая строка. Повторите ввод');
+            configMap.showError(stateMap.inputs.count, '* Нельзя пустую строку');
         } else if (isNaN(countNumber)) {
-            configMap.showError(stateMap.inputs.count, '* Введено не число. Повторите ввод');
+            configMap.showError(stateMap.inputs.count, '* Не число недопустимо');
         } else if (!countNumber) {
             stateMap.inputs.count.value = 0;
-            configMap.showError(stateMap.inputs.count, '* Введён ноль. Повторите ввод');
+            configMap.showError(stateMap.inputs.count, '* Ноль недопустим');
         } else {
             stateMap.product.count = countNumber;
             stateMap.inputs.count.value = countNumber;
@@ -131,26 +144,13 @@
         }
     }
 
-    countDeny = function(event) { // Запрещение копирования из буфера обмена.
-        var clipboardData = event.originalEvent.clipboardData || window.clipboardData,
-            pastedData;
-        pastedData = clipboardData.getData('text');
-        configMap.resetError(stateMap.inputs.count);
-        if (!configMap.isAcceptableCountString.test(pastedData)) {
-            configMap.showError(stateMap.inputs.count, '* Нельзя копировать из буфера обмена недопустимые символы');
-        } else {
-            return;
-        }
-        event.preventDefault();
-    }
-
-    priceRegain = function() { // Восстановление отображения цены при получении фокуса.
+    priceRegain = function() { //Восстановление отображения цены при получении фокуса
         if (stateMap.product.price) {
             stateMap.inputs.price.value = stateMap.product.price;
         }
     }
 
-    priceFormat = function(event) { // Проверка символов по одному.
+    priceFormat = function(event) { //Проверка символов по одному
         var e = event || window.event,
             code = e.charCode || e.keyCode,
             priceSymbol;
@@ -174,33 +174,7 @@
         e.preventDefault();
     }
 
-    priceCheck = function() { // Проверка по завершении редактирования.
-        var priceNumber = stateMap.inputs.price.value,
-            emptyPrice = false;
-
-        if (priceNumber === '') {
-            emptyPrice = true;
-        }
-
-        priceNumber = +priceNumber;
-        configMap.resetError(stateMap.inputs.price);
-        stateMap.flag.price = false;
-
-        if (emptyPrice) {
-            configMap.showError(stateMap.inputs.price, '* Введена пустая строка. Повторите ввод');
-        } else if (isNaN(priceNumber)) {
-            configMap.showError(stateMap.inputs.price, '* Введено не число. Повторите ввод');
-        } else if (!priceNumber) {
-            stateMap.inputs.price.value = 0;
-            configMap.showError(stateMap.inputs.price, '* Введён ноль. Повторите ввод');
-        } else {
-            stateMap.product.price = Math.round(priceNumber * 100) / 100;
-            stateMap.inputs.price.value = configMap.formatterUsdCur.format(priceNumber);
-            stateMap.flag.price = true;
-        }
-    }
-
-    priceDeny = function(event) { // Запрещение копирования из буфера обмена.
+    priceDeny = function(event) { //Запрещение копирования из буфера обмена
         var clipboardData = event.originalEvent.clipboardData || window.clipboardData,
             pastedData;
         pastedData = clipboardData.getData('text');
@@ -213,14 +187,42 @@
         event.preventDefault();
     }
 
-    proprietyControl = function () { // Проверка корректности ввода.
+    priceCheck = function() { //Проверка по завершении редактирования
+        var priceNumber = stateMap.inputs.price.value,
+            emptyPrice = false;
+
+        if (priceNumber === '') {
+            emptyPrice = true;
+        }
+
+        priceNumber = +priceNumber;
+        configMap.resetError(stateMap.inputs.price);
+        stateMap.flag.price = false;
+
+        if (emptyPrice) {
+			stateMap.product.price = '';
+            configMap.showError(stateMap.inputs.price, '* Введена пустая строка. Повторите ввод');
+        } else if (isNaN(priceNumber)) {
+			stateMap.product.price = priceNumber;
+            configMap.showError(stateMap.inputs.price, '* Введено не число. Повторите ввод');
+        } else if (!priceNumber) {
+            stateMap.product.price = priceNumber;
+            configMap.showError(stateMap.inputs.price, '* Введён ноль. Повторите ввод');
+        } else {
+            stateMap.product.price = Math.round(priceNumber * 100) / 100;
+            stateMap.inputs.price.value = configMap.formatterUsdCur.format(priceNumber);
+            stateMap.flag.price = true;
+        }
+    }
+
+    proprietyControl = function () { //Проверка корректности ввода
         stateMap.propriety = false;
         if (stateMap.flag.name && stateMap.flag.count && stateMap.flag.price) {
             stateMap.propriety = true;
         }
     }
 
-    changeCheck = function (event) { // Проверка корректности ввода.
+    changeCheck = function (isUpdate, currentTr, event) { //Проверка корректности ввода
         nameCheck();
         countCheck();
         priceRegain();
@@ -238,10 +240,10 @@
         }
     }
 
-    init = function (add, product, inputs) {
-        stateMap.add = add;
-        stateMap.product = product;
-        stateMap.inputs = inputs;
+    init = function (args) {
+        stateMap.add = args.add;
+        stateMap.product = args.product;
+        stateMap.inputs = args.inputs;
         $(stateMap.inputs.name)
             .on({
                 keypress: nameFormat,

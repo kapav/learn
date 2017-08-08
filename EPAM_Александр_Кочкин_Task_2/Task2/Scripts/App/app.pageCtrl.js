@@ -11,37 +11,8 @@
             $tbodyElement: null,
 			$filter: null
 		},
-        completeMainHtml, templReceiveMainHtml, setJqueryMap, onProductAdd, onFilterAdd, init;
+        setJqueryMap, onProductAdd, onFilterAdd, init;
 		
-    /*completeMainHtml = function() {
-        $.ajax({
-            url: 'HTML/main.html',
-            async: true,
-            error: function (xhr) {
-                console.log('Ошибка: ' + xhr.status + ' ' + xhr.statusText);
-            },
-            success: function (data) {
-                configMap.mainHtml = data;
-                console.log('completeMainHtml выполнен success');
-            }
-        });
-    };
-    templReceiveMainHtml = (function() {
-        var obtain;
-        obtain = function () {
-            var take = app.templTaking.mockTake;
-            take.on('templAchieve', completeMainHtml);
-            take.emit('obtainTempl');
-        };
-        return {
-            obtain: obtain
-        };
-    })();
-	templReceiveMainHtml.obtain();
-	setTimeout(function () {
-		console.log('завершено ожидание completeMainHtml');
-	}, 3000);*/
-	
     $.ajax({ //Получение вёрстки основной части страницы
         url: 'HTML/main.html',
         async: false,

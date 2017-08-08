@@ -78,8 +78,7 @@
     <Content Include="Scripts\App\app.utilBrowser.js" />
     <Content Include="Scripts\App\app.util.js" />
     <Content Include="Scripts\App\app.utilRenderMap.js" />
-    <Content Include="Scripts\App\app.verif.js" />
-    <Content Include="Scripts\App\app.templTaking.js" />
+    <Content Include="Scripts\App\app.verifProduct.js" />
     <Content Include="Scripts\App\app.verifFilter.js" />
     <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.1.1.min.map" />

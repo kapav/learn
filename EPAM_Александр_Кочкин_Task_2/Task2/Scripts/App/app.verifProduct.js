@@ -33,8 +33,7 @@
         configMap.resetError(stateMap.inputs.name);
         if (code < configMap.controlCharMaxNum ||
             e.charCode === configMap.firefoxFuncBtnNum ||
-            e.ctrlKey ||
-            e.altKey) {
+            e.ctrlKey || e.altKey) {
             return;
         }
         nameSymbol = String.fromCharCode(code);
@@ -222,7 +221,7 @@
         }
     }
 
-    changeCheck = function (isUpdate, currentTr, event) { //Проверка корректности ввода
+    changeCheck = function (event) { //Проверка корректности ввода
         nameCheck();
         countCheck();
         priceRegain();

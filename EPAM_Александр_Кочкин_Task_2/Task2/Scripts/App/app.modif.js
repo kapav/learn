@@ -112,8 +112,7 @@
 	};
 	
     init = function(args) {
-		var selfOwn = this,
-			productParams, filterParams;
+		var productParams, filterParams;
 		stateMap.$container = args.$container;
 		stateMap.$tbodyElement = args.$tbodyElement;
 	    stateMap.inventory = args.inventory;
@@ -142,7 +141,7 @@
 			inputFilter: stateMap.inputs.filter 
 		};
 		app.verifFilter.init(filterParams);
-		$(stateMap.changeBtnInModal).on('click', configMap.changeCheck.bind(selfOwn, stateMap.isUpdate, stateMap.currentTr)); //
+		$(stateMap.changeBtnInModal).on('click', configMap.changeCheck);
 		$(stateMap.dropBtnInModal).on('click', dropPlace);
 		$(stateMap.dbBtnFilter)
 			.on('click', configMap.searchCheck)

@@ -14,7 +14,7 @@
 			$container: null,
 			$tbodyElement: null
 		},
-        onClickBtnFilter, onClickToggleSorting, init;
+        onClickToggleSorting, init;
 		
     onClickToggleSorting = function() { //Изменяет направление сортировки
 		var selfOwn = this,

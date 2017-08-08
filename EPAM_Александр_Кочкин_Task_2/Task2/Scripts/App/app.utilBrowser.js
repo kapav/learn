@@ -10,47 +10,16 @@
         $(elem).next().html(errorMessage);
 		$(elem).next().removeClass('conceal-text');
 		$(elem).addClass('data-paint-red');
-        //$(elem).next().removeClass('text-hide');
-        //$(elem).addClass('data-paint-red');
     };
 	
     resetError = function(container) { //Сброс ошибки текстового поля
         var elem = container;
 		$(elem).next().addClass('conceal-text');
-        //$(elem).next().addClass('text-hide');
         $(elem).removeClass('data-paint-red');
     };
 	
     appendTableRow = function(productEntry) { //Добавляет строку таблицы в вёрстку
-        var completeRow, templReceiveRow, templRow, trInnerBlock, trElem;
-		/*completeRow = function() {
-			$.ajax({
-				url: 'HTML/row.html',
-				async: true,
-				error: function (xhr) {
-					console.log('Ошибка: ' + xhr.status + ' ' + xhr.statusText);
-				},
-				success: function (data) {
-					templRow = data;
-					console.log('completeRow выполнен success');
-				}
-			});
-		};
-		templReceiveRow = (function() {
-			var obtain;
-			obtain = function () {
-				var take = app.templTaking.mockTake;
-				take.on('templAchieve', completeRow);
-				take.emit('obtainTempl');
-			};
-			return {
-				obtain: obtain
-			};
-		})();
-		templReceiveRow.obtain();
-		setTimeout(function () {
-			console.log('завершено ожидание completeRow');
-		}, 100);*/
+        var templRow, trInnerBlock, trElem;
         $.ajax({
             url: 'HTML/row.html',
             async: false,
@@ -59,7 +28,7 @@
             }
         });
         trInnerBlock = _.template(templRow)(productEntry);
-        trElem = $(document.createElement("tr")).html(trInnerBlock)[0];
+        trElem = $(document.createElement('tr')).html(trInnerBlock)[0];
         $(this).append(trElem);
     };
 	
